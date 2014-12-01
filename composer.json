@@ -1,0 +1,21 @@
+{
+    "name": "gloomy/sossoa-bundle",
+    "description": "Debug application using SosSoa",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "iamluc",
+            "email": "luc@vieillescazes.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/framework-bundle": "~2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gloomy\\SosSoaBundle\\": ""
+        }
+    }
+}
