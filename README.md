@@ -33,5 +33,6 @@ composer.phar require "gloomy/sossoa-bundle" "~0.2.0"
 ``` yaml
 gloomy_sos_soa:
     application : "my-application" # required
-    host: "localhost:3000"         # Optional
+    host: "localhost"              # Optional
+    port: 3000                     # Optional
 ```

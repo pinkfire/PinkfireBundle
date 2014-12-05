@@ -19,7 +19,10 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                 ->end()
                 ->scalarNode('host')
-                    ->defaultValue('tcp://localhost:3000')
+                    ->defaultValue('localhost')
+                ->end()
+                ->integerNode('port')
+                    ->defaultValue(3000)
                 ->end()
             ->end();
 

@@ -9,11 +9,13 @@ class SosSoaClient
 
     protected $application;
     protected $host;
+    protected $port;
 
-    public function __construct($application = 'unknown', $host = 'tcp://localhost:3000')
+    public function __construct($application = 'unknown', $host = 'localhost', $port = 3000)
     {
         $this->application = $application;
         $this->host = $host;
+        $this->port = $port;
     }
 
     public function push($path, $message, $level = 'info', array $context = [])
@@ -39,8 +41,9 @@ class SosSoaClient
         ]);
 
         $header = "POST /threads HTTP/1.0\r\n";
+        $header .= "Host: ".$this->host."\r\n";
         $header .= "Content-Type: application/json\r\n";
-        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= "Content-Length: ".strlen($content)."\r\n";
         $header .= "\r\n";
 
         return $header.$content;
@@ -48,7 +51,7 @@ class SosSoaClient
 
     protected function write($data)
     {
-        $resource = @fsockopen($this->host, -1, $this->errno, $this->errstr, 2);
+        $resource = @fsockopen($this->host, $this->port, $this->errno, $this->errstr, 2);
         @fwrite($resource, $data);
         @fclose($resource);
     }

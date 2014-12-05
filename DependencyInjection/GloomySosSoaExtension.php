@@ -16,6 +16,7 @@ class GloomySosSoaExtension extends Extension
 
         $container->setParameter('sossoa.application', $config['application']);
         $container->setParameter('sossoa.host', $config['host']);
+        $container->setParameter('sossoa.port', $config['port']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
