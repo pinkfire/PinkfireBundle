@@ -14,7 +14,7 @@ INSTALL
 ### Install with composer
 
 ```
-composer.phar require "gloomy/sossoa-bundle" "~0.1.0"
+composer.phar require "gloomy/sossoa-bundle" "~0.2.0"
 ```
 
 ### Update your app/AppKernel.php
@@ -28,10 +28,10 @@ composer.phar require "gloomy/sossoa-bundle" "~0.1.0"
     }
 ```
 
-### Update your app/config/parameters.yml
+### Update your config (app/config/config_dev.yml)
 
 ``` yaml
-parameters:
-    #...
-    sossoa_application: "my-application"
+gloomy_sos_soa:
+    application : "my-application" # required
+    host: "localhost:3000"         # Optional
 ```

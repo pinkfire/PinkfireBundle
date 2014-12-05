@@ -10,7 +10,8 @@
         </service>
 
         <service id="sossoa.client" class="Gloomy\SosSoaBundle\Service\SosSoaClient">
-            <argument>%sossoa_application%</argument>
+            <argument>%sossoa.application%</argument>
+            <argument>%sossoa.host%</argument>
         </service>
 
         <service id="sossoa.request_listener" class="Gloomy\SosSoaBundle\EventListener\SosSoaRequestListener">
