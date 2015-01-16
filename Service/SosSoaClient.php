@@ -37,7 +37,8 @@ class SosSoaClient
             'path' => $path,
             'message' => $message,
             'context' => $context,
-            'level' => $level
+            'level' => $level,
+            'date' => time(),
         ]);
 
         $header = "POST /threads HTTP/1.0\r\n";
