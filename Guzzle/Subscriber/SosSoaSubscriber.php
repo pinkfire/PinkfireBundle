@@ -29,8 +29,10 @@ class SosSoaSubscriber implements SubscriberInterface
     {
         $sfRequest = $this->requestStack->getMasterRequest();
 
-        if ($path = $sfRequest->attributes->get('_sossoa_path')) {
+        if ($sfRequest && $path = $sfRequest->attributes->get('_sossoa_path')) {
             $event->getRequest()->setHeader('X-SOSSOA-PATH', $path);
+        } else {
+            $event->getRequest()->setHeader('X-SOSSOA-PATH', '/'.uniqid());
         }
     }
 }
