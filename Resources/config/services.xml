@@ -5,25 +5,25 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="sossoa.guzzle_subscriber" class="Gloomy\SosSoaBundle\Guzzle\Subscriber\SosSoaSubscriber">
+        <service id="pinkfire.guzzle_subscriber" class="Pinkfire\PinkfireBundle\Guzzle\Subscriber\PinkfireSubscriber">
             <argument type="service" id="request_stack" />
         </service>
 
-        <service id="sossoa.client" class="Gloomy\SosSoaBundle\Service\SosSoaClient">
-            <argument>%sossoa.application%</argument>
-            <argument>%sossoa.host%</argument>
-            <argument>%sossoa.port%</argument>
+        <service id="pinkfire.client" class="Pinkfire\PinkfireBundle\Service\PinkfireClient">
+            <argument>%pinkfire.application%</argument>
+            <argument>%pinkfire.host%</argument>
+            <argument>%pinkfire.port%</argument>
         </service>
 
-        <service id="sossoa.request_listener" class="Gloomy\SosSoaBundle\EventListener\SosSoaRequestListener">
-            <argument type="service" id="sossoa.client" />
+        <service id="pinkfire.request_listener" class="Pinkfire\PinkfireBundle\EventListener\PinkfireRequestListener">
+            <argument type="service" id="pinkfire.client" />
 
             <tag name="kernel.event_subscriber"></tag>
         </service>
 
-        <service id="sossoa.monolog_handler" class="Gloomy\SosSoaBundle\Monolog\Handler\SosSoaHandler">
+        <service id="pinkfire.monolog_handler" class="Pinkfire\PinkfireBundle\Monolog\Handler\PinkfireHandler">
             <argument type="service" id="request_stack" />
-            <argument type="service" id="sossoa.client" />
+            <argument type="service" id="pinkfire.client" />
         </service>
     </services>
 

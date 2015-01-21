@@ -1,20 +1,19 @@
-SosSoaBundle
-============
+# PinkfireBundle
 
-ABOUT
------
+Symfony bundle to integrate support of [Pinkfire](https://github.com/pinkfire/pinkfire).
 
-Symfony bundle to integrate support of [sos-soa](https://github.com/iamluc/sos-soa).
+Pinkfire is a great tool to help debugging SOA (Service Oriented Architecture) by centralizing logs.
 
-sos-soa is a small tool to help debugging SOA (Service Oriented Architecture) by centralizing logs.
+## Requirements
 
-INSTALL
--------
+* Symfony 2.3.x
+
+## Documentation
 
 ### Install with composer
 
 ```
-composer.phar require "gloomy/sossoa-bundle" "~0.2.0"
+composer.phar require "pinkfire/pinkfire-bundle"
 ```
 
 ### Update your app/AppKernel.php
@@ -24,14 +23,14 @@ composer.phar require "gloomy/sossoa-bundle" "~0.2.0"
     //...
     if (in_array($this->getEnvironment(), array('dev', 'test'))) {
         //...
-        $bundles[] = new Gloomy\SosSoaBundle\GloomySosSoaBundle();
+        $bundles[] = new Pinkfire\PinkfireBundle\PinkfireBundle();
     }
 ```
 
 ### Update your config (app/config/config_dev.yml)
 
 ``` yaml
-gloomy_sos_soa:
+pinkfire:
     application : "my-application" # required
     host: "localhost"              # Optional
     port: 3000                     # Optional
