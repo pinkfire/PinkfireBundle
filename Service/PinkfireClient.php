@@ -18,19 +18,19 @@ class PinkfireClient
         $this->port = $port;
     }
 
-    public function push($path, $channel, $message, $level = 'info', array $context = [])
+    public function push($path, $channel, $message, $level = 'info', array $context = [], array $links = [])
     {
         $path .= '/'.uniqid();
 
         try {
-            $this->write($this->generateData($path, $channel, $message, $level, $context));
+            $this->write($this->generateData($path, $channel, $message, $level, $context, $links));
         } catch (\Exception $e) {
         }
 
         return $path;
     }
 
-    protected function generateData($path, $channel, $message, $level, $context)
+    protected function generateData($path, $channel, $message, $level, $context, $links)
     {
         $content = json_encode([
             'application' => $this->application,
@@ -40,7 +40,8 @@ class PinkfireClient
             'context' => $context,
             'level' => $level,
             'date' => time(),
-        ]);
+            'links' => $links,
+        ], JSON_FORCE_OBJECT);
 
         $header = "POST /threads HTTP/1.0\r\n";
         $header .= "Host: ".$this->host."\r\n";

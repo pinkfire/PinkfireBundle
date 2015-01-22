@@ -25,6 +25,12 @@ class SosSoaHandler extends AbstractProcessingHandler
             $path = $request->attributes->get('_sossoa_path', '');
         }
 
-        $this->client->push($path, $record['message'], strtolower($record['level_name']), $record['context']);
+        $links = [];
+        if (isset($record['context']['_links'])) {
+            $links = $record['context']['_links'];
+            unset($record['context']['_links']);
+        }
+
+        $this->client->push($path, $record['message'], strtolower($record['level_name']), $record['context'], $links);
     }
 }
