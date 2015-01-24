@@ -29,11 +29,11 @@ class PinkfireSubscriber implements SubscriberInterface
     {
         $sfRequest = $this->requestStack->getMasterRequest();
 
-        if ($path = $sfRequest->attributes->get('_pinkfire_path')) {
+        if ($sfRequest && $path = $sfRequest->attributes->get('_pinkfire_path')) {
             $event->getRequest()->setHeader('X-PINKFIRE-PATH', $path);
         }
 
-        if ($channel = $sfRequest->attributes->get('_pinkfire_channel')) {
+        if ($sfRequest && $channel = $sfRequest->attributes->get('_pinkfire_channel')) {
             $event->getRequest()->setHeader('X-PINKFIRE-CHANNEL', $channel);
         }
     }
