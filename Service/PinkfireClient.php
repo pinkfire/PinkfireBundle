@@ -30,20 +30,38 @@ class PinkfireClient
         return $path;
     }
 
-    protected function generateData($path, $channel, $message, $level, $context, $links)
+    public function patch($path, $channel, $message, $level = 'info', array $context = [], array $links = [])
     {
-        $content = json_encode([
+        try {
+            $this->write($this->generateData($path, $channel, $message, $level, $context, $links, 'PATCH'));
+        } catch (\Exception $e) {
+        }
+
+        return true;
+    }
+
+    protected function generateData($path, $channel, $message, $level, $context, $links, $method = 'POST')
+    {
+        $content = [
             'application' => $this->application,
             'path' => $path,
-            'message' => $message,
             'channel' => $channel,
             'context' => $context,
-            'level' => $level,
             'date' => time(),
             'links' => $links,
-        ], JSON_FORCE_OBJECT);
+        ];
 
-        $header = "POST /threads HTTP/1.0\r\n";
+        if ($message) {
+            $content['message'] = $message;
+        }
+
+        if ($level) {
+            $content['level'] = $level;
+        }
+
+        $content = json_encode($content, JSON_FORCE_OBJECT);
+
+        $header = $method." /threads HTTP/1.0\r\n";
         $header .= "Host: ".$this->host."\r\n";
         $header .= "Content-Type: application/json\r\n";
         $header .= "Content-Length: ".strlen($content)."\r\n";
