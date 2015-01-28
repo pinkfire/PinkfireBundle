@@ -35,3 +35,23 @@ pinkfire:
     host: "localhost"              # Optional
     port: 3000                     # Optional
 ```
+
+If you want to forward logs from monolog
+
+``` yaml
+monolog:
+    handlers:
+        pinkfire:
+            type: service
+            id: pinkfire.monolog_handler
+```
+
+# Use
+
+You can use the the service `pinkfire.client` like this:
+
+```php
+// ...
+$client = $this->get('pinkfire.client');
+$client->push('my_path', 'my_channel', 'my_message', 'info', ['my_context' => 'context'], ['link_1' => 'https://github.com/pinkfire/PinkfireBundle']);
+```
