@@ -2,10 +2,10 @@
 
 namespace Pinkfire\PinkfireBundle\EventListener;
 
-use Pinkfire\PinkfireBundle\Service\PinkfireClient;
-use Psr\Log\LoggerInterface;
+use Pinkfire\PinkfireBundle\Service\RequestAwareClient;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -13,7 +13,7 @@ class PinkfireRequestListener implements EventSubscriberInterface
 {
     protected $client;
 
-    public function __construct(PinkfireClient $client)
+    public function __construct(RequestAwareClient $client)
     {
         $this->client = $client;
     }
@@ -25,15 +25,35 @@ class PinkfireRequestListener implements EventSubscriberInterface
         }
 
         $request = $event->getRequest();
-        $parent = $request->headers->get('X-PINKFIRE-PATH', '');
-        $channel = $request->headers->get('X-PINKFIRE-CHANNEL', '');
 
-        $path = $this->client->push($parent, $channel, sprintf('New master request "%s" (%s)', $request->getPathInfo(), $request->getMethod()), 'primary', $this->getContext($request));
+        $request->attributes->set('_pinkfire_channel', $request->headers->get('X-PINKFIRE-CHANNEL', ''));
+        $request->attributes->set('_pinkfire_path', $request->headers->get('X-PINKFIRE-PATH', ''));
+
+        $path = $this->client->push(sprintf('New master request "%s" (%s)', $request->getPathInfo(), $request->getMethod()), 'primary', $this->getRequestContext($request));
+
         $request->attributes->set('_pinkfire_path', $path);
-        $request->attributes->set('_pinkfire_channel', $channel);
     }
 
-    protected function getContext(Request $request)
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
+        $request = $event->getRequest();
+        $response = $event->getResponse();
+
+        $context = ['body' => $response->getContent()];
+
+        $links = [];
+        if ($response->headers->has('X-Debug-Token-Link')) {
+            $links = ['Profiler' => 'http://' . $request->getHost() . $response->headers->get('X-Debug-Token-Link')];
+        }
+
+        $this->client->patch(null, null, $context, $links);
+    }
+
+    protected function getRequestContext(Request $request)
     {
         return [
             'query' => $request->query->all(),
@@ -50,6 +70,7 @@ class PinkfireRequestListener implements EventSubscriberInterface
     {
         return array(
             KernelEvents::REQUEST => array('onKernelRequest', 255),
+            KernelEvents::RESPONSE => array('onKernelResponse', -255),
         );
     }
 }
