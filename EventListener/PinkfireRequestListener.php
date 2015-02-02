@@ -5,12 +5,16 @@ namespace Pinkfire\PinkfireBundle\EventListener;
 use Pinkfire\PinkfireBundle\Service\RequestAwareClient;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class PinkfireRequestListener implements EventSubscriberInterface
 {
+    const IN = "\xE2\x86\x98 ";
+    const OUT = "\xE2\xAC\x85 ";
+
     protected $client;
 
     public function __construct(RequestAwareClient $client)
@@ -43,26 +47,32 @@ class PinkfireRequestListener implements EventSubscriberInterface
         $request = $event->getRequest();
         $response = $event->getResponse();
 
-        $context = ['body' => $response->getContent()];
-
         $links = [];
         if ($response->headers->has('X-Debug-Token-Link')) {
-            $links = ['Profiler' => 'http://' . $request->getHost() . $response->headers->get('X-Debug-Token-Link')];
+            $links = ['Profiler' => $request->getSchemeAndHttpHost().$response->headers->get('X-Debug-Token-Link')];
         }
 
-        $this->client->patch(null, null, $context, $links);
+        $this->client->patch(null, null, $this->getResponseContext($response), $links);
     }
 
     protected function getRequestContext(Request $request)
     {
         return [
-            'query' => $request->query->all(),
-            'request' => $request->request->all(),
-            'headers' => $request->headers->all(),
-            'server' => $request->server->all(),
-            'files' => $request->files->all(),
-            'cookies' => $request->cookies->all(),
-            'attributes' => $request->attributes->all(),
+            self::IN.'query' => $request->query->all(),
+            self::IN.'request' => $request->request->all(),
+            self::IN.'headers' => $request->headers->all(),
+            self::IN.'server' => $request->server->all(),
+            self::IN.'files' => $request->files->all(),
+            self::IN.'cookies' => $request->cookies->all(),
+            self::IN.'attributes' => $request->attributes->all(),
+        ];
+    }
+
+    protected function getResponseContext(Response $response)
+    {
+        return [
+            self::OUT.'body' => $response->getContent(),
+            self::OUT.'headers' => $response->headers->all(),
         ];
     }
 

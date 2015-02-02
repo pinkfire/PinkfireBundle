@@ -47,7 +47,6 @@ class PinkfireClient
             'path' => $path,
             'channel' => $channel,
             'context' => $context,
-            'date' => time(),
             'links' => $links,
         ];
 
