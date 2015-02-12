@@ -16,10 +16,12 @@ class PinkfireRequestListener implements EventSubscriberInterface
     const OUT = "\xE2\xAC\x85 ";
 
     protected $client;
+    protected $urlBlacklist;
 
-    public function __construct(RequestAwareClient $client)
+    public function __construct(RequestAwareClient $client, array $urlBlacklist = [])
     {
         $this->client = $client;
+        $this->urlBlacklist = $urlBlacklist;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -29,6 +31,10 @@ class PinkfireRequestListener implements EventSubscriberInterface
         }
 
         $request = $event->getRequest();
+
+        if ($this->isBlacklisted($request)) {
+            return;
+        }
 
         $request->attributes->set('_pinkfire_channel', $request->headers->get('X-PINKFIRE-CHANNEL', ''));
         $request->attributes->set('_pinkfire_path', $request->headers->get('X-PINKFIRE-PATH', ''));
@@ -46,6 +52,10 @@ class PinkfireRequestListener implements EventSubscriberInterface
 
         $request = $event->getRequest();
         $response = $event->getResponse();
+
+        if ($this->isBlacklisted($request)) {
+            return;
+        }
 
         $links = [];
         if ($response->headers->has('X-Debug-Token-Link')) {
@@ -74,6 +84,17 @@ class PinkfireRequestListener implements EventSubscriberInterface
             self::OUT.'body' => $response->getContent(),
             self::OUT.'headers' => $response->headers->all(),
         ];
+    }
+
+    protected function isBlacklisted(Request $request)
+    {
+        foreach ($this->urlBlacklist as $pattern) {
+            if (preg_match(sprintf('#^/%s$#', $pattern), $request->getPathInfo())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function getSubscribedEvents()

@@ -22,6 +22,7 @@
 
         <service id="pinkfire.request_listener" class="Pinkfire\PinkfireBundle\EventListener\PinkfireRequestListener">
             <argument type="service" id="pinkfire.request_aware.client" />
+            <argument>%pinkfire.url_blacklist%</argument>
 
             <tag name="kernel.event_subscriber"></tag>
         </service>

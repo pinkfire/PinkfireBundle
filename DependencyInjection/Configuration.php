@@ -24,6 +24,10 @@ class Configuration implements ConfigurationInterface
                 ->integerNode('port')
                     ->defaultValue(3000)
                 ->end()
+                ->arrayNode('url_blacklist')
+                    ->addDefaultChildrenIfNoneSet()
+                    ->prototype('scalar')->defaultValue('_.*')->end()
+                ->end()
             ->end()
         ;
 
