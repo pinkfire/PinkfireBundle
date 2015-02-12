@@ -4,10 +4,6 @@ Symfony bundle to integrate support of [Pinkfire](https://github.com/pinkfire/pi
 
 Pinkfire is a great tool to help debugging SOA (Service Oriented Architecture) by centralizing logs.
 
-## Requirements
-
-* Symfony 2.3.x
-
 ## Documentation
 
 ### Install with composer
@@ -48,10 +44,13 @@ monolog:
 
 # Use
 
-You can use the the service `pinkfire.client` like this:
+You can use the the service `pinkfire.request_aware.client` like this:
 
 ```php
 // ...
-$client = $this->get('pinkfire.client');
-$client->push('my_path', 'my_channel', 'my_message', 'info', ['my_context' => 'context'], ['link_1' => 'https://github.com/pinkfire/PinkfireBundle']);
+$client = $this->get('pinkfire.request_aware.client');
+$client->push('message', 'level', ['my_context' => 'context'], ['link_1' => 'https://github.com/pinkfire/PinkfireBundle']);
+$client->patch('message', 'level', ['my_context' => 'context updated'], ['link_1' => 'https://github.com/pinkfire/PinkfireBundle']);
 ```
+
+The RequestAwareClient will automatically push/patch to the path and the channel of the master request.
