@@ -4,15 +4,15 @@ Symfony bundle to integrate support of [Pinkfire](https://github.com/pinkfire/pi
 
 Pinkfire is a great tool to help debugging SOA (Service Oriented Architecture) by centralizing logs.
 
-## Documentation
+## Install
 
-### Install with composer
+### Add the bundle to you `composer.json`
 
 ```
 composer.phar require "pinkfire/pinkfire-bundle"
 ```
 
-### Update your app/AppKernel.php
+### Update your `app/AppKernel.php`
 
 ``` php
 <?php
@@ -23,7 +23,7 @@ composer.phar require "pinkfire/pinkfire-bundle"
     }
 ```
 
-### Update your config (app/config/config_dev.yml)
+### Update your config (`app/config/config_dev.yml`)
 
 ``` yaml
 pinkfire:
@@ -32,7 +32,16 @@ pinkfire:
     port: 3000                     # Optional
 ```
 
-If you want to forward logs from monolog
+### Test it
+
+Open pinkfire in you browser then visit your website (in dev environment).
+You should see all master requests !
+
+## Go further
+
+### Monolog
+
+You can forward your logs to pinkfire by updating your monolog config in file `app/config/config_dev.yml`
 
 ``` yaml
 monolog:
@@ -42,9 +51,21 @@ monolog:
             id: pinkfire.monolog_handler
 ```
 
-# Use
+### Guzzle
 
-You can use the the service `pinkfire.request_aware.client` like this:
+Create a tree of dependencies with you APIs using our Guzzle subscriber
+
+```php
+$client = new GuzzleHttp\Client();
+$emitter = $client->getEmitter();
+$emitter->attach($this->get('pinkfire.guzzle_subscriber'));
+```
+
+The subscriber will automatically propagate the path and the channel.
+
+### Log all the things !
+
+Use the service `pinkfire.request_aware.client` to send everything you want:
 
 ```php
 // ...
