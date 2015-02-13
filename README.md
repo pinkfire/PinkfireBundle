@@ -6,7 +6,7 @@ Pinkfire is a great tool to help debugging SOA (Service Oriented Architecture) b
 
 ## Install
 
-### Add the bundle to you `composer.json`
+### Add the bundle to your `composer.json`
 
 ```
 composer.phar require "pinkfire/pinkfire-bundle"
