@@ -14,14 +14,17 @@ class PinkfireRequestListener implements EventSubscriberInterface
 {
     const IN = "\xE2\x86\x98 ";
     const OUT = "\xE2\xAC\x85 ";
+    const HIDDEN = '_pinkfire_';
 
     protected $client;
     protected $urlBlacklist;
+    protected $urlDebuglist;
 
-    public function __construct(RequestAwareClient $client, array $urlBlacklist = [])
+    public function __construct(RequestAwareClient $client, array $urlBlacklist = [], array $urlDebuglist = [])
     {
         $this->client = $client;
         $this->urlBlacklist = $urlBlacklist;
+        $this->urlDebuglist = $urlDebuglist;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -68,6 +71,8 @@ class PinkfireRequestListener implements EventSubscriberInterface
     protected function getRequestContext(Request $request)
     {
         return [
+            self::HIDDEN.'is_debug' => $this->isDebug($request),
+            self::IN.'_uri' => $request->getRequestUri(),
             self::IN.'query' => $request->query->all(),
             self::IN.'request' => $request->request->all(),
             self::IN.'headers' => $request->headers->all(),
@@ -89,6 +94,17 @@ class PinkfireRequestListener implements EventSubscriberInterface
     protected function isBlacklisted(Request $request)
     {
         foreach ($this->urlBlacklist as $pattern) {
+            if (preg_match(sprintf('#^/%s$#', $pattern), $request->getPathInfo())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function isDebug(Request $request)
+    {
+        foreach ($this->urlDebuglist as $pattern) {
             if (preg_match(sprintf('#^/%s$#', $pattern), $request->getPathInfo())) {
                 return true;
             }

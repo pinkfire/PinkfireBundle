@@ -30,6 +30,8 @@ pinkfire:
     application : "my-application" # required
     host: "localhost"              # Optional
     port: 3000                     # Optional
+    url_blacklist: [ ]             # Optional, array of URIs patterns to ignore
+    url_debug: [ "_.*" ]           # Optional, array of URIs patterns to mark as debug
 ```
 
 ### Test it
