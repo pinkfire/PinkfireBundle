@@ -19,12 +19,14 @@ class PinkfireRequestListener implements EventSubscriberInterface
     protected $client;
     protected $urlBlacklist;
     protected $urlDebuglist;
+    protected $logMaxLength;
 
-    public function __construct(RequestAwareClient $client, array $urlBlacklist = [], array $urlDebuglist = [])
+    public function __construct(RequestAwareClient $client, array $urlBlacklist = [], array $urlDebuglist = [], $logMaxLength = -1)
     {
         $this->client = $client;
         $this->urlBlacklist = $urlBlacklist;
         $this->urlDebuglist = $urlDebuglist;
+        $this->logMaxLength = $logMaxLength;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -70,7 +72,7 @@ class PinkfireRequestListener implements EventSubscriberInterface
 
     protected function getRequestContext(Request $request)
     {
-        return [
+        $context = [
             self::HIDDEN.'is_debug' => $this->isDebug($request),
             self::IN.'_uri' => $request->getRequestUri(),
             self::IN.'query' => $request->query->all(),
@@ -81,6 +83,17 @@ class PinkfireRequestListener implements EventSubscriberInterface
             self::IN.'cookies' => $request->cookies->all(),
             self::IN.'attributes' => $request->attributes->all(),
         ];
+
+        try {
+            $content = $request->getContent();
+            if (is_string($content) && ctype_print($content)) {
+                $context[self::IN.'body'] = substr($content, 0, $this->logMaxLength);
+            }
+        } catch (\LogicException $e) {
+            // the user already got the request content as a resource
+        }
+
+        return $context;
     }
 
     protected function getResponseContext(Response $response)

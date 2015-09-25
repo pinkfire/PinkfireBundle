@@ -19,6 +19,7 @@ class PinkfireExtension extends Extension
         $container->setParameter('pinkfire.port', $config['port']);
         $container->setParameter('pinkfire.url_blacklist', $config['url_blacklist']);
         $container->setParameter('pinkfire.url_debug', $config['url_debug']);
+        $container->setParameter('pinkfire.log_max_length', $config['log_max_length']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');

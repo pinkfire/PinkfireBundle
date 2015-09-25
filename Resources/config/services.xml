@@ -24,6 +24,7 @@
             <argument type="service" id="pinkfire.request_aware.client" />
             <argument>%pinkfire.url_blacklist%</argument>
             <argument>%pinkfire.url_debug%</argument>
+            <argument>%pinkfire.log_max_length%</argument>
 
             <tag name="kernel.event_subscriber"></tag>
         </service>
