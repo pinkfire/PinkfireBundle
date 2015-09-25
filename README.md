@@ -30,6 +30,7 @@ pinkfire:
     application : "my-application" # required
     host: "localhost"              # Optional
     port: 3000                     # Optional
+    log_max_length: -1             # Optional, max length of read input data
     url_blacklist: [ ]             # Optional, array of URIs patterns to ignore
     url_debug: [ "_.*" ]           # Optional, array of URIs patterns to mark as debug
 ```
