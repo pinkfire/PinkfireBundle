@@ -42,7 +42,7 @@ class PinkfireRequestListener implements EventSubscriberInterface
         $request->attributes->set('_pinkfire_channel', $request->headers->get('X-PINKFIRE-CHANNEL', ''));
         $request->attributes->set('_pinkfire_path', $request->headers->get('X-PINKFIRE-PATH', ''));
 
-        $path = $this->client->push(sprintf('New master request "%s" (%s)', $request->getPathInfo(), $request->getMethod()), 'primary', $this->getRequestContext($request));
+        $path = $this->client->push($this->generateMessage($request), 'primary', $this->getRequestContext($request));
 
         $request->attributes->set('_pinkfire_path', $path);
     }
@@ -65,14 +65,15 @@ class PinkfireRequestListener implements EventSubscriberInterface
             $links = ['Profiler' => $request->getSchemeAndHttpHost().$response->headers->get('X-Debug-Token-Link')];
         }
 
-        $this->client->patch(null, null, $this->getResponseContext($response), $links);
+        $level = $response->isClientError() || $response->isServerError() ? 'error' : null;
+        $this->client->patch($this->generateMessage($request, $response), $level, $this->getResponseContext($response), $links);
     }
 
     protected function getRequestContext(Request $request)
     {
         return [
             self::HIDDEN.'is_debug' => $this->isDebug($request),
-            self::IN.'_uri' => $request->getRequestUri(),
+            self::IN.'_request' => (string) $request,
             self::IN.'query' => $request->query->all(),
             self::IN.'request' => $request->request->all(),
             self::IN.'headers' => $request->headers->all(),
@@ -86,9 +87,20 @@ class PinkfireRequestListener implements EventSubscriberInterface
     protected function getResponseContext(Response $response)
     {
         return [
-            self::OUT.'body' => $response->getContent(),
-            self::OUT.'headers' => $response->headers->all(),
+            self::OUT.'response' => (string) $response,
         ];
+    }
+
+    protected function generateMessage(Request $request, Response $response = null)
+    {
+        $message = sprintf('New master request "%s" (%s)', $request->getPathInfo(), $request->getMethod());
+
+        if (null !== $response) {
+            $statusText = isset(Response::$statusTexts[$response->getStatusCode()]) ? Response::$statusTexts[$response->getStatusCode()] : '';
+            $message .= sprintf(' - %s %s', $response->getStatusCode(), $statusText);
+        }
+
+        return $message;
     }
 
     protected function isBlacklisted(Request $request)
