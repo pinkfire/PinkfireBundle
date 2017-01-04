@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="pinkfire.request_listener" class="Pinkfire\PinkfireBundle\EventListener\PinkfireRequestListener">
+            <argument type="service" id="pinkfire.request_aware.client" />
+            <argument>%pinkfire.url_blacklist%</argument>
+            <argument>%pinkfire.url_debug%</argument>
+            <argument>%pinkfire.log_max_length%</argument>
+
+            <tag name="kernel.event_subscriber" />
+        </service>
+    </services>
+
+</container>

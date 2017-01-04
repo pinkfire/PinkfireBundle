@@ -13,6 +13,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('pinkfire');
 
         $rootNode
+            ->canBeDisabled()
             ->children()
                 ->scalarNode('application')
                     ->isRequired()

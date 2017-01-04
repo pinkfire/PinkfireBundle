@@ -26,15 +26,6 @@
             <argument type="service" id="pinkfire.client" />
         </service>
 
-        <service id="pinkfire.request_listener" class="Pinkfire\PinkfireBundle\EventListener\PinkfireRequestListener">
-            <argument type="service" id="pinkfire.request_aware.client" />
-            <argument>%pinkfire.url_blacklist%</argument>
-            <argument>%pinkfire.url_debug%</argument>
-            <argument>%pinkfire.log_max_length%</argument>
-
-            <tag name="kernel.event_subscriber" />
-        </service>
-
         <service id="pinkfire.monolog_handler" class="Pinkfire\PinkfireBundle\Monolog\Handler\PinkfireHandler">
             <argument type="service" id="pinkfire.request_aware.client" />
             <argument>%pinkfire.log_level%</argument>

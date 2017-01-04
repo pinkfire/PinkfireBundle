@@ -33,7 +33,13 @@ pinkfire:
     log_max_length: -1             # Optional, max length of read input data
     url_blacklist: [ ]             # Optional, array of URIs patterns to ignore
     url_debug: [ "_.*" ]           # Optional, array of URIs patterns to mark as debug
+    log_level: warning             # Optional, log level used by the Monolog handler
+    enabled: true                  # optional, allow to disable the request/response listener
 ```
+
+*About `enabled`*: This bundle will not throw exception or crash if it can connect the the pinkfire host.
+But it adds a small overhead.
+So if your pinkfire server is not running and you care about performance, you should disable it.
 
 ### Test it
 
