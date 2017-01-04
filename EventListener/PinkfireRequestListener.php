@@ -67,7 +67,24 @@ class PinkfireRequestListener implements EventSubscriberInterface
             $links = ['Profiler' => $request->getSchemeAndHttpHost().$response->headers->get('X-Debug-Token-Link')];
         }
 
-        $level = $response->isClientError() || $response->isServerError() ? 'error' : null;
+        switch (true) {
+            case $response->isInformational():
+                $level = 'info';
+                break;
+
+            case $response->isSuccessful():
+                $level = 'success';
+                break;
+
+            case $response->isRedirection():
+                $level = 'redirection';
+                break;
+
+            default:
+                $level = 'error';
+                break;
+        }
+
         $this->client->patch($this->generateMessage($request, $response), $level, $this->getResponseContext($response), $links);
     }
 
