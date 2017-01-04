@@ -73,6 +73,13 @@ $emitter = $client->getEmitter();
 $emitter->attach($this->get('pinkfire.guzzle_subscriber'));
 ```
 
+### Buzz
+
+A bridge is available to interact with `Buzz`.
+
+The easiest way is to attach the `pinkfire.buzz_listener` service to a `Buzz\Browser`.
+If you use a `Buzz\Client` and not a `Buzz\Browser`, use the `Pinkfire\PinkfireBundle\Buzz\Client\PinkfireClientDecorator`.
+
 ### Log all the things !
 
 Use the service `pinkfire.request_aware.client` to send everything you want:

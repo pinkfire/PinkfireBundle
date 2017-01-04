@@ -15,6 +15,10 @@
             <tag name="csa_guzzle.middleware" alias="pinkfire" />
         </service>
 
+        <service id="pinkfire.buzz_listener" class="Pinkfire\PinkfireBundle\Buzz\Listener\PinkfireListener">
+            <argument type="service" id="request_stack" />
+        </service>
+
         <service id="pinkfire.client" class="Pinkfire\PinkfireBundle\Service\PinkfireClient">
             <argument>%pinkfire.application%</argument>
             <argument>%pinkfire.host%</argument>

@@ -3,6 +3,10 @@
     "description": "Debug application using Pinkfire",
     "type": "symfony-bundle",
     "license": "MIT",
+    "keywords":    [
+        "guzzle",
+        "buzz"
+    ],
     "authors": [
         {
             "name": "iamluc",
