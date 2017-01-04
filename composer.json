@@ -11,7 +11,11 @@
     ],
     "require": {
         "php": ">=5.4",
-        "symfony/framework-bundle": "~2.3"
+        "symfony/framework-bundle": "^2.3|^3.0"
+    },
+    "suggest": {
+        "csa/guzzle-bundle": "Provide integration with Guzzle",
+        "monolog/monolog": "Provide logs management"
     },
     "autoload": {
         "psr-4": {
