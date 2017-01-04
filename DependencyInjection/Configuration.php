@@ -36,7 +36,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->defaultValue('_.*')->end()
                 ->end()
                 ->scalarNode('log_level')
-                    ->defaultValue('300')
+                    ->defaultValue('warning')
                 ->end()
             ->end()
         ;
