@@ -34,6 +34,9 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultChildrenIfNoneSet()
                     ->prototype('scalar')->defaultValue('_.*')->end()
                 ->end()
+                ->scalarNode('log_level')
+                    ->defaultValue('300')
+                ->end()
             ->end()
         ;
 

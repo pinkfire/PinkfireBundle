@@ -37,6 +37,7 @@
 
         <service id="pinkfire.monolog_handler" class="Pinkfire\PinkfireBundle\Monolog\Handler\PinkfireHandler">
             <argument type="service" id="pinkfire.request_aware.client" />
+            <argument>%pinkfire.log_level%</argument>
         </service>
     </services>
 

@@ -27,11 +27,19 @@ class RequestAwareClient
 
     private function getPath()
     {
-        return $this->requestStack->getMasterRequest()->attributes->get('_pinkfire_path', '');
+        if ($master = $this->requestStack->getMasterRequest()) {
+            return $master->attributes->get('_pinkfire_path', '');
+        }
+
+        return '';
     }
 
     private function getChannel()
     {
-        return $this->requestStack->getMasterRequest()->attributes->get('_pinkfire_channel', '');
+        if ($master = $this->requestStack->getMasterRequest()) {
+            return $master->attributes->get('_pinkfire_channel', '');
+        }
+
+        return '';
     }
 }
