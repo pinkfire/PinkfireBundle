@@ -56,15 +56,16 @@ monolog:
 
 ### Guzzle
 
-Create a tree of dependencies with you APIs using our Guzzle subscriber
+With Guzzle 6 (and `csa/guzzle-bundle`), a middleware is automatically registered to add the Pinkfire headers (path and channel)
+to every requests.
+
+With older version of Guzzle, use our Guzzle subscriber
 
 ```php
 $client = new GuzzleHttp\Client();
 $emitter = $client->getEmitter();
 $emitter->attach($this->get('pinkfire.guzzle_subscriber'));
 ```
-
-The subscriber will automatically propagate the path and the channel.
 
 ### Log all the things !
 

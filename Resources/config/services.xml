@@ -9,6 +9,12 @@
             <argument type="service" id="request_stack" />
         </service>
 
+        <service id="pinkfire.guzzle_middleware" class="Pinkfire\PinkfireBundle\Guzzle\Middleware\PinkfireMiddleware">
+            <argument type="service" id="request_stack" />
+
+            <tag name="csa_guzzle.middleware" alias="pinkfire" />
+        </service>
+
         <service id="pinkfire.client" class="Pinkfire\PinkfireBundle\Service\PinkfireClient">
             <argument>%pinkfire.application%</argument>
             <argument>%pinkfire.host%</argument>
@@ -26,7 +32,7 @@
             <argument>%pinkfire.url_debug%</argument>
             <argument>%pinkfire.log_max_length%</argument>
 
-            <tag name="kernel.event_subscriber"></tag>
+            <tag name="kernel.event_subscriber" />
         </service>
 
         <service id="pinkfire.monolog_handler" class="Pinkfire\PinkfireBundle\Monolog\Handler\PinkfireHandler">
