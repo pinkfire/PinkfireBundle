@@ -64,7 +64,7 @@ class PinkfireRequestListener implements EventSubscriberInterface
 
         $links = [];
         if ($response->headers->has('X-Debug-Token-Link')) {
-            $links = ['Profiler' => $request->getSchemeAndHttpHost().$response->headers->get('X-Debug-Token-Link')];
+            $links = ['Profiler' => $response->headers->get('X-Debug-Token-Link')];
         }
 
         switch (true) {
